@@ -1,0 +1,333 @@
+[11-Sep-2024 11:01:38 America/Boise] PHP Warning:  include(): Failed opening '/home4/getcons3/renouvelable.get-consult.com/vendor/composer/../vlucas/phpdotenv/src/Repository/RepositoryBuilder.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/getcons3/renouvelable.get-consult.com/vendor/composer/ClassLoader.php on line 576
+[11-Sep-2024 11:01:38 America/Boise] PHP Fatal error:  Uncaught ReflectionException: Class "config" does not exist in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:912
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(912): ReflectionClass->__construct('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#14 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#15 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist. in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:914
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#14 {main}
+  thrown in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 914
+[11-Sep-2024 11:01:40 America/Boise] PHP Warning:  include(): Failed opening '/home4/getcons3/renouvelable.get-consult.com/vendor/composer/../vlucas/phpdotenv/src/Repository/RepositoryBuilder.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/getcons3/renouvelable.get-consult.com/vendor/composer/ClassLoader.php on line 576
+[11-Sep-2024 11:01:40 America/Boise] PHP Fatal error:  Uncaught ReflectionException: Class "config" does not exist in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:912
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(912): ReflectionClass->__construct('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#14 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#15 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist. in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:914
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#14 {main}
+  thrown in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 914
+[11-Sep-2024 11:01:44 America/Boise] PHP Warning:  include(): Failed opening '/home4/getcons3/renouvelable.get-consult.com/vendor/composer/../vlucas/phpdotenv/src/Repository/RepositoryBuilder.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/getcons3/renouvelable.get-consult.com/vendor/composer/ClassLoader.php on line 576
+[11-Sep-2024 11:01:44 America/Boise] PHP Fatal error:  Uncaught ReflectionException: Class "config" does not exist in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:912
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(912): ReflectionClass->__construct('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#14 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#15 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist. in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:914
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#14 {main}
+  thrown in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 914
+[11-Sep-2024 11:01:47 America/Boise] PHP Warning:  include(): Failed opening '/home4/getcons3/renouvelable.get-consult.com/vendor/composer/../vlucas/phpdotenv/src/Repository/RepositoryBuilder.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/getcons3/renouvelable.get-consult.com/vendor/composer/ClassLoader.php on line 576
+[11-Sep-2024 11:01:47 America/Boise] PHP Fatal error:  Uncaught ReflectionException: Class "config" does not exist in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:912
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(912): ReflectionClass->__construct('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#14 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#15 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist. in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:914
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#14 {main}
+  thrown in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 914
+[11-Sep-2024 11:01:48 America/Boise] PHP Warning:  include(): Failed opening '/home4/getcons3/renouvelable.get-consult.com/vendor/composer/../vlucas/phpdotenv/src/Repository/RepositoryBuilder.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/getcons3/renouvelable.get-consult.com/vendor/composer/ClassLoader.php on line 576
+[11-Sep-2024 11:01:48 America/Boise] PHP Fatal error:  Uncaught ReflectionException: Class "config" does not exist in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:912
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(912): ReflectionClass->__construct('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#14 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#15 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist. in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:914
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#14 {main}
+  thrown in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 914
+[11-Sep-2024 11:01:55 America/Boise] PHP Warning:  include(): Failed opening '/home4/getcons3/renouvelable.get-consult.com/vendor/composer/../vlucas/phpdotenv/src/Repository/RepositoryBuilder.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/getcons3/renouvelable.get-consult.com/vendor/composer/ClassLoader.php on line 576
+[11-Sep-2024 11:01:55 America/Boise] PHP Fatal error:  Uncaught ReflectionException: Class "config" does not exist in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:912
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(912): ReflectionClass->__construct('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#14 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#15 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist. in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:914
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#14 {main}
+  thrown in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 914
+[11-Sep-2024 11:01:57 America/Boise] PHP Warning:  include(): Failed opening '/home4/getcons3/renouvelable.get-consult.com/vendor/composer/../vlucas/phpdotenv/src/Repository/RepositoryBuilder.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/getcons3/renouvelable.get-consult.com/vendor/composer/ClassLoader.php on line 576
+[11-Sep-2024 11:01:57 America/Boise] PHP Fatal error:  Uncaught ReflectionException: Class "config" does not exist in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:912
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(912): ReflectionClass->__construct('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#14 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#15 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist. in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:914
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#14 {main}
+  thrown in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 914
+[11-Sep-2024 11:02:02 America/Boise] PHP Warning:  include(): Failed opening '/home4/getcons3/renouvelable.get-consult.com/vendor/composer/../vlucas/phpdotenv/src/Repository/RepositoryBuilder.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/getcons3/renouvelable.get-consult.com/vendor/composer/ClassLoader.php on line 576
+[11-Sep-2024 11:02:02 America/Boise] PHP Fatal error:  Uncaught ReflectionException: Class "config" does not exist in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:912
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(912): ReflectionClass->__construct('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#14 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#15 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [config] does not exist. in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:914
+Stack trace:
+#0 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(795): Illuminate\Container\Container->build('config')
+#1 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(961): Illuminate\Container\Container->resolve('config', Array, true)
+#2 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(731): Illuminate\Foundation\Application->resolve('config', Array)
+#3 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(946): Illuminate\Container\Container->make('config', Array)
+#4 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(1454): Illuminate\Foundation\Application->make('config')
+#5 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(560): Illuminate\Container\Container->offsetGet('config')
+#6 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(611): Illuminate\Log\LogManager->getDefaultDriver()
+#7 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(124): Illuminate\Log\LogManager->parseDriver(NULL)
+#8 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Log/LogManager.php(681): Illuminate\Log\LogManager->driver()
+#9 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(317): Illuminate\Log\LogManager->error('Class "Dotenv\\R...', Array)
+#10 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(278): Illuminate\Foundation\Exceptions\Handler->reportThrowable(Object(Error))
+#11 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(497): Illuminate\Foundation\Exceptions\Handler->report(Object(Error))
+#12 /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(146): Illuminate\Foundation\Http\Kernel->reportException(Object(Error))
+#13 /home4/getcons3/renouvelable.get-consult.com/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#14 {main}
+  thrown in /home4/getcons3/renouvelable.get-consult.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 914
+[11-Sep-2024 17:42:30 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[12-Sep-2024 14:21:12 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[12-Sep-2024 14:40:40 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[12-Sep-2024 15:04:12 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[12-Sep-2024 15:33:57 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[13-Sep-2024 07:34:53 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[13-Sep-2024 07:50:33 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[13-Sep-2024 07:53:44 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[13-Sep-2024 10:07:36 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[13-Sep-2024 16:44:04 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[13-Sep-2024 17:00:08 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[16-Sep-2024 09:48:41 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[16-Sep-2024 09:53:04 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[16-Sep-2024 13:30:29 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[16-Oct-2024 16:52:40 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[16-Oct-2024 16:52:40 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[23-Oct-2024 20:14:55 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[23-Oct-2024 21:57:20 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[25-Oct-2024 13:14:57 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[25-Oct-2024 17:47:42 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[02-Nov-2024 23:53:47 Africa/Casablanca] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[02-Dec-2024 17:13:32 Africa/Casablanca] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[04-Dec-2024 18:28:54 Africa/Casablanca] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[04-Dec-2024 18:57:13 Africa/Casablanca] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[04-Dec-2024 19:06:50 Africa/Casablanca] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[04-Dec-2024 19:12:54 Africa/Casablanca] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[10-Dec-2024 13:57:48 Africa/Casablanca] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[10-Dec-2024 14:08:18 Africa/Casablanca] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
+[21-May-2025 09:11:45 Africa/Casablanca] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/getcons3/renouvelable.get-consult.com/Modules/GeoLocale/Traits/GeoLocaleTrait.php on line 147
