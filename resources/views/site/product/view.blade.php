@@ -42,6 +42,40 @@
 @endsection
 @section('content')
 
+{{-- hide the vendor content "made by Qasdaoui" --}}
+    <style>
+        /* Hide all vendor information and related buttons
+        /* Vendor info box */
+        .relative.z-ng.px-2.pb-15p.border.rounded.rounded-b-none,
+
+        /* Vendor info tab */
+        .vendor-info,
+        #product-vendor-info,
+        [id^="vendor-info-tab"],
+
+        /* Go to Store button */
+        .process-goto.relative.flex.justify-center.text-gray-10.hover\:text-gray-12.font-medium.text-sm.items-center.py-2.dm-sans.bg-gray-11.border.border-t-0.rounded.rounded-t-none,
+
+        /* Send Message button */
+        .send-item-message,
+        a[data-vendor],
+        .send-message-container,
+
+        /* More Products from Vendor section */
+        #same_shop,
+        div[id^="same_shop"],
+
+        /* Tab content */
+        .c-tab[data-tab="product-vendor-info"] {
+        display: none !important;
+        }
+
+        /* Specifically target "Aller au magasin" button */
+        a[href*="site.shop"],
+        a[href*="/shop/"] {
+        display: none !important;
+        } 
+    </style>
     <!-- Details section start -->
     <section class="layout-wrapper px-4 xl:px-0 md:mt-30p mt-5" id="item-details-container">
 
