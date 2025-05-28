@@ -4,19 +4,19 @@
 @extends('../site/layouts.app')
 @php
     extract($data);
-    // $id, $name, $code, $sku, $slug, $type, $available_from, $available_to, $description, $summary, $parent_id, 
-    // $categories, $brand, $brand_id, $shop_id, $vendor_id, $shop_alias, $regular_price, $regular_price_formatted, 
-    // $sale_price, $sale_price_formatted, $sale_from, $sale_to, $tax_classes, $total_sales, $featured, $virtual, 
-    // $downloadable, $downloads, $download_limit, $status, $total_downloads, $manage_stocks, $stock_quantity, 
-    // $stock_status, $stock_hide, $backorders, $critical_stock_quantity, $weight, $dimensions, $shipping_status, 
-    // $shipping_required, $is_shipping_taxable, $shipping_class_ids, $reviews_allowed, $related_ids, $upsell_ids, 
-    // $cross_sell_ids, $purchase_note, $featured_image, $featured_image_small, $featured_image_medium, $images, 
-    // $videos, $meta, $tags, $seo, $warranty_type, $warranty_period, $warranty_policy, $review_count, $review_average, 
-    // $can_review, $total_wish, $external_products, $attributes, $attribute_values, $default_attributes, $variations, 
-    // $estimated_delivery, $estimated_delivery_unit, $is_wishlisted, $is_compared, $isOutOfStock, $wishlist_id, $group_products, 
+    // $id, $name, $code, $sku, $slug, $type, $available_from, $available_to, $description, $summary, $parent_id,
+    // $categories, $brand, $brand_id, $shop_id, $vendor_id, $shop_alias, $regular_price, $regular_price_formatted,
+    // $sale_price, $sale_price_formatted, $sale_from, $sale_to, $tax_classes, $total_sales, $featured, $virtual,
+    // $downloadable, $downloads, $download_limit, $status, $total_downloads, $manage_stocks, $stock_quantity,
+    // $stock_status, $stock_hide, $backorders, $critical_stock_quantity, $weight, $dimensions, $shipping_status,
+    // $shipping_required, $is_shipping_taxable, $shipping_class_ids, $reviews_allowed, $related_ids, $upsell_ids,
+    // $cross_sell_ids, $purchase_note, $featured_image, $featured_image_small, $featured_image_medium, $images,
+    // $videos, $meta, $tags, $seo, $warranty_type, $warranty_period, $warranty_policy, $review_count, $review_average,
+    // $can_review, $total_wish, $external_products, $attributes, $attribute_values, $default_attributes, $variations,
+    // $estimated_delivery, $estimated_delivery_unit, $is_wishlisted, $is_compared, $isOutOfStock, $wishlist_id, $group_products,
     // $share_link, $offerCheck, $discountPercent, $product
     // Those data get from controller
-    
+
     $vendorDetails = $product->vendor;
     $groupProducts = $product->groupProducts();
     $relatedProducts = $product->getRelatedProducts();
@@ -28,7 +28,12 @@
     $displayPrice = preference('display_price_in_shop');
     $categoryPath = $product->categoryPath();
     $filterVariation = $product->filterVariation();
-    $defaultAddresses = isset(Auth::user()->id) ? App\Models\Address::getAll()->where('user_id', Auth::user()->id)->where('is_default', 1)->first() : null;
+    $defaultAddresses = isset(Auth::user()->id)
+        ? App\Models\Address::getAll()
+            ->where('user_id', Auth::user()->id)
+            ->where('is_default', 1)
+            ->first()
+        : null;
     $gateways = (new Modules\Gateway\Entities\GatewayModule())->payableGateways();
     $offerFlag = $product->offerCheck();
     $vendorReview = $product->vendorReview();
@@ -42,10 +47,10 @@
 @endsection
 @section('content')
 
-{{-- hide the vendor content "made by Qasdaoui" --}}
+    {{-- hide the vendor content "made by Qasdaoui" --}}
     <style>
         /* Hide all vendor information and related buttons
-        /* Vendor info box */
+            /* Vendor info box */
         .relative.z-ng.px-2.pb-15p.border.rounded.rounded-b-none,
 
         /* Vendor info tab */
@@ -67,14 +72,14 @@
 
         /* Tab content */
         .c-tab[data-tab="product-vendor-info"] {
-        display: none !important;
+            display: none !important;
         }
 
         /* Specifically target "Aller au magasin" button */
         a[href*="site.shop"],
         a[href*="/shop/"] {
-        display: none !important;
-        } 
+            display: none !important;
+        }
     </style>
     <!-- Details section start -->
     <section class="layout-wrapper px-4 xl:px-0 md:mt-30p mt-5" id="item-details-container">
@@ -231,6 +236,10 @@
 
                     @doAction('before_single_product_summary_variation', $definedData)
 
+                    @if (isActive('B2B') && $product->isEnableB2B())
+                        @include('b2b::site.product-view')
+                    @endif
+
                     @if (!$product->isGroupedProduct() && !$product->isExternalProduct())
                         @include('site.layouts.section.product-details.variation')
                     @endif
@@ -243,7 +252,7 @@
                 </div>
                 <span class="text-sm text-gray-10 roboto-medium font-medium">{{ $purchase_note }}</span>
             </div>
-            
+
 
             <div class="w-full sm:w-full lg:w-28% md:order-none ltr:md:pl-3 rtl:md:pr-3">
 
@@ -313,7 +322,9 @@
                                 @endif
                                 @if ($reviews_allowed == 1 && preference('reviews_enable_product_review') == 1)
                                     @php
-                                        $initialTab != 0 && $initialTab != 1 && $initialTab != 2 ? ($initialTab = 3) : '';
+                                        $initialTab != 0 && $initialTab != 1 && $initialTab != 2
+                                            ? ($initialTab = 3)
+                                            : '';
                                         $ratingTab++;
                                     @endphp
                                     <a href="javascript:void(0)" class="c-tabs-nav__link"
