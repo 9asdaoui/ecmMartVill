@@ -50,7 +50,7 @@
     {{-- hide the vendor content "made by Qasdaoui" --}}
     <style>
         /* Hide all vendor information and related buttons
-                /* Vendor info box */
+                    /* Vendor info box */
         .relative.z-ng.px-2.pb-15p.border.rounded.rounded-b-none,
 
         /* Vendor info tab */
@@ -338,9 +338,9 @@
                                 !empty($summary) ||
                                 (isset($videos) && is_array($videos) && count($videos) > 0))
                             {{-- made by 9asdaoui --}}
-                            {{-- @if (!empty($summary))
+                            @if (!empty($summary))
 
-                            @php
+                                {{-- @php
                                 $summaryArray = json_decode($summary, true);
                                 $locale = app()->getLocale();
                                 $localizedSummary = $summaryArray[$locale] ?? $summaryArray['fr'];
@@ -350,10 +350,34 @@
                                 <p class="text-gray-700 leading-relaxed font-normal roboto-regular">
                                     {{ $localizedSummary }}
                                 </p>
-                            </div>
-                            @endif --}}
+                            </div> --}}
 
-                            {{-- end --}} 
+                                @if (!empty($summary))
+                                    @php
+                                        $summaryArray = json_decode($summary, true);
+                                        $locale = app()->getLocale();
+                                        $localizedSummary = '';
+
+                                        // Safely check if $summaryArray is an array before accessing
+                                        if (is_array($summaryArray)) {
+                                            $localizedSummary = $summaryArray[$locale] ?? ($summaryArray['fr'] ?? '');
+                                        } else {
+                                            // Fallback to using $summary as a direct string if not valid JSON
+                                            $localizedSummary = $summary;
+                                        }
+                                    @endphp
+
+                                    @if (!empty($localizedSummary))
+                                        <div class="product-summary mb-4">
+                                            <p class="text-gray-700 leading-relaxed font-normal roboto-regular">
+                                                {{ $localizedSummary }}
+                                            </p>
+                                        </div>
+                                    @endif
+                                @endif
+                            @endif
+
+                            {{-- end  --}}
                             @include('site.layouts.section.product-details.description')
                         @endif
                         @if (
