@@ -34,6 +34,23 @@
                 <label for="summary" class="col-md-2 control-label label-title">{{ __('Summary') }}
                 </label>
                 <div class="col-md-10 custom-details-form">
+                    {{-- made by 9asdaoui --}}
+                    <div
+                        style="background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-family: Arial, sans-serif;">
+                        <strong>Important:</strong> Please enter the summary in <code>valid JSON format</code> with
+                        language codes as keys and the text as values.<br>
+                        Example format:<br>
+                        <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto;">
+                        {
+                        "en": "Your English summary here.",
+                        "fr": "Votre résumé en français ici.",
+                        "ar": "ملخصك هنا بالعربية."
+                        }
+                        </pre>
+                        Make sure to use double quotes (<code>"</code>) around keys and texts, and follow proper JSON
+                        syntax to avoid errors.
+                    </div>
+                    {{-- made by 9asdaoui --}}
                     <textarea class="form-control" name="summary">{{ isset($product) ? $product->summary : '' }}</textarea>
                 </div>
             </div>

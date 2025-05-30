@@ -50,7 +50,7 @@
     {{-- hide the vendor content "made by Qasdaoui" --}}
     <style>
         /* Hide all vendor information and related buttons
-            /* Vendor info box */
+                /* Vendor info box */
         .relative.z-ng.px-2.pb-15p.border.rounded.rounded-b-none,
 
         /* Vendor info tab */
@@ -337,6 +337,19 @@
                                 strpos($description, '<img src') ||
                                 !empty($summary) ||
                                 (isset($videos) && is_array($videos) && count($videos) > 0))
+                            {{-- made by 9asdaoui --}}
+                            @php
+                                $summaryArray = json_decode($summary, true);
+                                $locale = app()->getLocale();
+                                $localizedSummary = $summaryArray[$locale] ?? $summaryArray['fr'];
+                            @endphp
+
+                            <div class="product-summary mb-4">
+                                <p class="text-gray-700 leading-relaxed font-normal roboto-regular">
+                                    {{ $localizedSummary }}
+                                </p>
+                            </div>
+                            {{-- end --}}
                             @include('site.layouts.section.product-details.description')
                         @endif
                         @if (
