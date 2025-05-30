@@ -338,6 +338,8 @@
                                 !empty($summary) ||
                                 (isset($videos) && is_array($videos) && count($videos) > 0))
                             {{-- made by 9asdaoui --}}
+                            @if (!empty($summary))
+
                             @php
                                 $summaryArray = json_decode($summary, true);
                                 $locale = app()->getLocale();
@@ -349,7 +351,9 @@
                                     {{ $localizedSummary }}
                                 </p>
                             </div>
-                            {{-- end --}}
+                            @endif
+
+                            {{-- end --}} 
                             @include('site.layouts.section.product-details.description')
                         @endif
                         @if (
