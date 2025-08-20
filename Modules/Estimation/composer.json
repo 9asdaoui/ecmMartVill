@@ -1,0 +1,23 @@
+{
+    "name": "multi-vendor/estimation",
+    "description": "",
+    "authors": [
+        {
+            "name": "Q.Oussama",
+            "email": "oussamaqasdaoui@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Estimation\\": ""
+        }
+    }
+}

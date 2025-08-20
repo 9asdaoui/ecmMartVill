@@ -1,0 +1,19 @@
+{
+    "name": "Estimation",
+    "alias": "estimation",
+    "core": true,
+    "type": "custom",
+    "version": "1.0",
+    "description": "Solar energy estimation module",
+    "keywords": [],
+    "priority": 20,
+    "providers": [
+        "Modules\\Estimation\\Providers\\EstimationServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": [],
+    "translationSkipped": true,
+    "homePageViewSkipped": true
+}
+
