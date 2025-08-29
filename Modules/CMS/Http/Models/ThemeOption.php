@@ -29,6 +29,8 @@ class ThemeOption extends Model
 
     public $translatable = ['value'];
 
+    public static $loadData = null;
+
     /**
      * Relation with File Model
      *
@@ -346,5 +348,21 @@ class ThemeOption extends Model
             'Noto sans, sans-serif',
             'Rubik, sans-serif',
         ];
+    }
+
+    /**
+     * Get all theme options
+     *
+     * @return array
+     */
+    public static function singletons()
+    {
+        if (self::$loadData) {
+            return self::$loadData;
+        }
+
+        return self::$loadData =  \Cache::remember('theme_options', now()->addMinutes(1), function () {
+            return self::getAll()->pluck('key_value', 'name')->toArray();
+        });
     }
 }
