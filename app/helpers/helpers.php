@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\{CustomField, File, RoleUser, PermissionRole};
+use Modules\CMS\Http\Models\ThemeOption;
 use Nwidart\Modules\Facades\Module;
 
 if (! function_exists('getJsonDataFromFile')) {
@@ -342,7 +343,7 @@ if (! function_exists('option')) {
 
     function option($field = null, $default = null)
     {
-        $themeOptions = (new Modules\CMS\Http\Models\ThemeOption())->getAll()->pluck('key_value', 'name')->toArray();
+        $themeOptions = ThemeOption::singletons();
 
         if (is_null($field)) {
             return $themeOptions;
@@ -393,7 +394,7 @@ if (! function_exists('defaultRoles')) {
      */
     function defaultRoles()
     {
-        return ['super-admin', 'vendor-admin', 'customer', 'guest'];
+        return ['super-admin', 'vendor-admin', 'customer', 'guest', 'vendor-staff'];
     }
 }
 
@@ -408,6 +409,9 @@ function defaultImage(string $type)
         'products' => 'public/dist/img/default_product.jpg',
         'users' => 'public/dist/img/avatarUser.png',
         'blogs' => 'public/dist/img/blog.png',
+        'small_product' => 'public/dist/img/small_product.png',
+        'medium_product' => 'public/dist/img/medium_product.png',
+        'large_product' => 'public/dist/img/large_product.png',
     ];
 
     if (array_key_exists($type, $defaultImages)) {
@@ -1240,27 +1244,37 @@ if (! function_exists('martvillVersion')) {
 if (! function_exists('barcodeData')) {
 
     /**
-     * Martvill Version
+     * Return an array of barcode data
+     *
+     * This function returns an array of barcode data containing colors and types.
+     * The colors are represented as an array of RGB values and the types are a list
+     * of supported barcode types.
+     *
+     * @return array
      */
     function barcodeData(): array
     {
-        return [
-            'color' => [
-                'Black' => '[0,0,0]',
-                'Red' => '[255,0,0]',
-                'Lime' => '[0,255,0]',
-                'Blue' => '[0,0,255]',
-                'Yellow' => '[255,255,0]',
-                'Cyan / Aqua' => '[0,255,255]',
-                'Green' => '[0,128,0]',
-                'Deep sky blue' => '[0,191,255]',
-            ],
-            'type' => ['C128', 'C39', 'C39+', 'C39E', 'C39E+', 'C93', 'S25', 'S25+', 'I25', 'I25+', 'C128A',
-                'C128B', 'C128C', 'GS1-128', 'EAN2', 'EAN5', 'EAN8', 'EAN13', 'UPCA', 'UPCE', 'MSI', 'MSI+',
-                'POSTNET', 'PLANET', 'RMS4CC', 'KIX', 'IMB', 'CODABAR', 'CODE11', 'PHARMA', 'PHARMA2T', 'QRCODE',
-                'PDF417', 'DATAMATRIX',
-            ],
+        // Color
+        $color = [
+            'Black' => '[0,0,0]',
+            'Red' => '[255,0,0]',
+            'Lime' => '[0,255,0]',
+            'Blue' => '[0,0,255]',
+            'Yellow' => '[255,255,0]',
+            'Cyan / Aqua' => '[0,255,255]',
+            'Green' => '[0,128,0]',
+            'Deep sky blue' => '[0,191,255]',
         ];
+
+        // Barcode types
+        $type = [
+            'C128', 'C39', 'C39+', 'C39E', 'C39E+', 'C93', 'S25', 'S25+', 'I25', 'I25+', 'C128A',
+            'C128B', 'C128C', 'GS1-128', 'EAN2', 'EAN5', 'EAN8', 'EAN13', 'UPCA', 'UPCE', 'MSI', 'MSI+',
+            'POSTNET', 'PLANET', 'RMS4CC', 'KIX', 'IMB', 'CODABAR', 'CODE11', 'PHARMA', 'PHARMA2T', 'QRCODE',
+            'PDF417', 'DATAMATRIX',
+        ];
+
+        return compact('color', 'type');
     }
 }
 
@@ -1272,5 +1286,87 @@ if (! function_exists('defaultAuthSettings')) {
     function defaultAuthSettings(): string
     {
         return '{"template-1":{"required":[],"data":[]},"template-2":{"required":["title","description","file"],"data":{"title":"Login to Martvill","description":"Experience shopping made easy. Log in now to access exclusive offers, manage orders, and discover your personalized shopping experience. Your one-stop destination for convenience and savings starts here.","file":"image.jpg"}},"template-3":{"required":["file"],"data":{"file":"image.jpg"}},"template-4":{"required":["file"],"data":{"file":"image.png"}},"template-5":{"required":["file"],"data":{"file":"image.jpg"}},"template-6":{"required":[],"data":[]}}';
+    }
+}
+
+if (! function_exists('checkJsonValidation')) {
+    /**
+     * Validate and decode a JSON string, optionally extracting a locale-specific value.
+     *
+     * This function first checks if the input value is a valid JSON string. If valid,
+     * it decodes the JSON into an associative array. It then attempts to retrieve a
+     * value for the current application locale from the array. If the locale-specific
+     * value is not found, the function returns the first value from the JSON array.
+     *
+     * @param string $value The JSON string to be validated and decoded.
+     * @return mixed The decoded JSON value, either locale-specific or the first value.
+     */
+
+    function checkJsonValidation($value)
+    {
+        if (json_validate($value)) {
+
+            $value = json_decode($value, true);
+
+            if (isset($value[config('app.locale')])) {
+                $value = $value[config('app.locale')];
+            } else {
+                $value = array_values($value);
+
+                $value = array_shift($value);
+            }
+        }
+
+        return $value;
+    }
+}
+if (! function_exists('defaultMulticurrencyData')) {
+
+    /**
+     * default currency from cache or preference
+     *
+     * @return array
+     */
+    function defaultMulticurrencyData($multiCurrencies = null)
+    {
+        $defaultCurrency = \App\Services\Currency\DefaultMulticurrency::getInstance();
+
+        if (is_null($defaultCurrency->getData())) {
+            $defaultCurrency->setCurrencyData($multiCurrencies);
+
+            return $defaultCurrency->getData();
+        }
+
+        return $defaultCurrency->getData();
+    }
+}
+
+if (! function_exists('vendorStaffRole')) {
+    /**
+     * Get the ID of the vendor staff role.
+     *
+     * @return int|null
+     */
+    function vendorStaffRole()
+    {
+        $vendorStaff = \App\Models\Role::where('slug', 'vendor-staff')->first();
+
+        return $vendorStaff ? $vendorStaff->id : null;
+    }
+}
+
+if (! function_exists('checkIfUserIsStaff')) {
+    /**
+     * Check if the user is a vendor staff.
+     *
+     * @return bool
+     */
+    function checkIfUserIsStaff($userId = null)
+    {
+        if (! $userId) {
+            $userId = auth()->user()->id ?? auth()->guard('api')->user()->id;
+        }
+
+        return \App\Models\User::find($userId)?->role()?->vendor_id != null;
     }
 }
