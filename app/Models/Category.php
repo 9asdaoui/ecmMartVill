@@ -11,6 +11,7 @@
 namespace App\Models;
 
 use App\Rules\CheckValidFile;
+use App\Traits\HasTranslations;
 use App\Traits\ModelTraits\hasFiles;
 use App\Services\Category\CategoryCategorizationService;
 use Modules\MediaManager\Http\Models\ObjectFile;
@@ -20,8 +21,11 @@ use URL;
 class Category extends Model
 {
     use hasFiles;
+    use HasTranslations;
 
     protected $fillable = ['name', 'slug', 'order_by'];
+
+    public $translatable = ['name', 'slug'];
 
     /**
      * Default number of post to fetch from database
@@ -179,9 +183,9 @@ class Category extends Model
     protected static function storeValidation($data = [])
     {
         $validator = Validator::make($data, [
-            'name' => 'required|min:3|max:100',
+            'name' => 'required|min:3',
             'parent_id' => ['nullable', 'exists:categories,id'],
-            'slug' => 'required|max:120|unique:categories,slug',
+            'slug' => 'required|unique:categories,slug',
             'status' => 'required|in:Active,Inactive',
             'is_searchable' => 'required|in:1,0',
             'is_featured' => 'required|in:1,0',
@@ -483,5 +487,26 @@ class Category extends Model
             'randomCategories' => __('Random Categories'),
 
         ];
+    }
+
+    /**
+     * make sure all category slug is json format
+     *
+     * it's use for searching purposes
+     *
+     * @return void
+     */
+    public static function checkCategorySlugJson()
+    {
+        $categories = Category::get();
+
+        foreach ($categories as $category) {
+            if (! json_validate($category->getRawOriginal('slug'))) {
+                $category->setTranslation('slug', preference('dflt_lang', config('app.locale')), $category->slug);
+                $category->save();
+            }
+        }
+
+        self::forgetCache();
     }
 }

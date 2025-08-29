@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author TechVillage <support@techvill.org>
  *
@@ -10,6 +11,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Language;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Modules\Commission\Http\Models\Commission;
@@ -26,6 +28,7 @@ class CategoryController extends Controller
     {
         $data['vendors'] = Vendor::getAll()->where('status', 'Active')->all();
         $data['commission'] = Commission::getAll()->first();
+        $data['languages'] = Language::getAll()->where('status', 'Active');
 
         return view('admin.category.index', $data);
     }
@@ -43,14 +46,14 @@ class CategoryController extends Controller
         $categories = Category::parents('admin')->where('id', '!=', 1)->sortBy('order_by');
 
         foreach ($categories as $category) {
-            $categoriesChild = $category->childrenCategories->sortBy('order_by');
+            $categoriesChild = $category->childrenCategories->where('is_global', 1)->sortBy('order_by');
 
             foreach ($categoriesChild as $child) {
-                $subChilds = $child->childrenCategories->sortBy('order_by');
+                $subChilds = $child->childrenCategories->where('is_global', 1)->sortBy('order_by');
 
                 foreach ($subChilds as $subChild) {
                     $subChildren[$subChild->parent_id][] = [
-                        'text' => $subChild->name,
+                        'text' => $subChild->getTranslated('name', request()->input('lang', config('app.locale'))),
                         'id' => $subChild->id,
                         'parent_id' => $subChild->parent_id,
                         'create_child' => 0,
@@ -58,7 +61,7 @@ class CategoryController extends Controller
                 }
 
                 $children[$child->parent_id][] = [
-                    'text' =>  $child->name,
+                    'text' =>  $child->getTranslated('name', request()->input('lang', config('app.locale'))),
                     'id' => $child->id,
                     'state' => [
                         'opened' => false,
@@ -70,7 +73,7 @@ class CategoryController extends Controller
             }
 
             $data[] = [
-                'text' => $category->name,
+                'text' => $category->getTranslated('name', request()->input('lang', config('app.locale'))),
                 'id' => $category->id,
                 'state' => [
                     'opened' => true,
@@ -119,9 +122,35 @@ class CategoryController extends Controller
                 return $response;
             }
 
+            $lang = request()->input('lang', config('app.locale'));
+
+            $existsSlug = Category::whereRaw("JSON_VALID(slug)")
+                ->where("slug", $request->slug)
+                ->first();
+
+            if (! empty($existsSlug)) {
+                $response['status'] = 0;
+                $response['error'] = __('The slug has already been taken.');
+
+                return $response;
+            }
+
             $categoryId = (new Category())->store(
-                $request->only('name', 'parent_id', 'status', 'is_searchable', 'is_featured', 'slug', 'order_by', 'sell_commissions', 'is_global')
+                $request->only('parent_id', 'status', 'is_searchable', 'is_featured', 'order_by', 'sell_commissions', 'is_global')
             );
+
+            // return
+            $category = new Category();
+            $category->name = $request->name;
+            $category->slug = $request->slug;
+            $category->parent_id = $request->parent_id;
+            $category->status = $request->status;
+            $category->is_searchable = $request->is_searchable;
+            $category->is_featured = $request->is_featured;
+            $category->order_by = $request->order_by;
+            $category->sell_commissions = $request->sell_commissions;
+            $category->is_global = $request->is_global;
+            $category->save();
         }
         $response['status'] = 1;
         $response['category_id'] = $categoryId;
@@ -137,18 +166,18 @@ class CategoryController extends Controller
      */
     public function edit(Request $request)
     {
-        $category = Category::getAll()->where('id', $request->id)->first();
+        $category = Category::where('id', $request->id)->first();
 
         if (! empty($category)) {
             $data = [
-                'name' => $category->name,
-                'slug' => $category->slug,
+                'name' => $category->getTranslated('name', request()->input('lang', config('app.locale'))),
+                'slug' => $category->getTranslated('slug', request()->input('lang', config('app.locale'))),
                 'status' => $category->status,
                 'is_searchable' => $category->is_searchable,
                 'is_featured' => $category->is_featured,
                 'sell_commissions' => $category->sell_commissions,
                 'parent_id' => $category->parent_id,
-                'parent_name' => $category->category->name ?? null,
+                'parent_name' => $category->category?->getTranslated('name', request()->input('lang', config('app.locale'))),
                 'image_path' => $category->fileUrl(),
             ];
 
@@ -179,10 +208,31 @@ class CategoryController extends Controller
                     return $response;
                 }
 
+
+                $lang = request()->input('lang', config('app.locale'));
+
+                $existsSlug = Category::whereRaw("JSON_VALID(slug)")
+                    ->where("slug->{$lang}", $request->slug)
+                    ->where('id', '!=', $id)
+                    ->first();
+
+
+
+                if (! empty($existsSlug)) {
+                    $response['status'] = 0;
+                    $response['error'] = __('The slug has already been taken.');
+
+                    return $response;
+                }
+
                 if ((new Category())->updateCategory(
-                    $request->only('name', 'parent_id', 'status', 'is_searchable', 'is_featured', 'slug', 'sell_commissions'),
+                    $request->only('parent_id', 'status', 'is_searchable', 'is_featured', 'sell_commissions'),
                     $id
                 )) {
+                    $details = Category::where('id', $id)->first();
+                    $details->setTranslation('name', request()->input('lang', config('app.locale')), $request->name);
+                    $details->setTranslation('slug', request()->input('lang', config('app.locale')), $request->slug);
+                    $details->save();
                     $response['status'] = 1;
                 }
             }
@@ -233,7 +283,6 @@ class CategoryController extends Controller
         }
 
         return 0;
-
     }
 
     /**

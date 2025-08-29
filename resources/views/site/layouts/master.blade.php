@@ -14,7 +14,7 @@
         $themeOption = \Modules\CMS\Http\Models\ThemeOption::getAll();
 
         $layout = 'default';
-        
+
         if (!isset($page->layout)) {
             $page = \Modules\CMS\Entities\Page::firstWhere('default', '1');
         }
@@ -22,14 +22,15 @@
         $primaryColor = option($layout . '_template_primary_color', '#FCCA19');
 
         [$fontFamily, $genericFamily] = explode(',', option($layout . '_template_font_family', 'DM Sans, sans-serif'));
-
+        $multiCurrencies = \App\Models\MultiCurrency::getAll();
+        $defaultMulticurrency = defaultMulticurrencyData($multiCurrencies);
     @endphp
-   <style>
-    :root {
-        --primary-color: {{ $primaryColor }};
-        --global-font: {{ $fontFamily . ',' . $genericFamily }};
-        --semi-primary-color: {{ $primaryColor . '11' }};
-    }
+    <style>
+        :root {
+            --primary-color: {{ $primaryColor }};
+            --global-font: {{ $fontFamily . ',' . $genericFamily }};
+            --semi-primary-color: {{ $primaryColor . '11' }};
+        }
     </style>
     <link rel="stylesheet" href="{{ asset('public/dist/css/intl-tel-input/intlTelInput.min.css') }}">
     <link rel="stylesheet" href="{{ asset('public/css/app.min.css?v=2.5') }}" />
@@ -39,6 +40,14 @@
     <link rel="stylesheet" href="{{ asset('public/frontend/assets/css/google-font-roboto.min.css') }}">
     <link rel="stylesheet" href="{{ asset('public/datta-able/fonts/fontawesome/css/fontawesome-all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('public/dist/plugins/jQueryUI/jquery-ui.min.css') }}" type="text/css" />
+
+    {{-- // Add these CSS imports to the head section of your master layout --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
 
     @php
         $favicon = App\Models\Preference::getFavicon();
@@ -57,13 +66,13 @@
     <!-- Menubar css end-->
 
     <!-- Custom CSS-->
-    <link rel="stylesheet" href="{{ asset('public/dist/css/site_custom.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/dist/css/site_custom.min.css?v=2.8') }}">
 
     <!-- User define custom dynamic css file -->
     @if (File::exists('Modules/CMS/Resources/assets/css/user-custom.css'))
         <link rel="stylesheet" href="{{ asset('Modules/CMS/Resources/assets/css/user-custom.css?v=' . time()) }}">
     @endif
-    
+
     @if (file_exists(base_path('public/js/lang/' . config('app.locale') . '.js')))
         <script src="{{ asset('public/js/lang/' . config('app.locale') . '.js') }}"></script>
     @else
@@ -96,16 +105,18 @@
         var offerTimer = null;
         var offerTimerDetailsPage = null;
         var tempIsGroupProduct = false;
+        var exchangeRate = 1;
         @auth
         var userLoggedIn = true;
         @else
             var userLoggedIn = false;
         @endauth
+        var loadLoginModalUrl = '{{ url('load-login-modal') }}';
     </script>
     <!-- Required Js -->
     <script src="{{ asset('public/dist/js/jquery.min.js') }}"></script>
     <!-- Affiliate Code Common Header -->
-    
+
     @doAction('before_site_head')
 </head>
 
@@ -113,30 +124,32 @@
 <body <?php echo apply_filters('site_body_tag', 'class="antialiased min-h-screen"'); ?> x-data="{ 'layout': 'grid' }" x-cloak>
     @doAction('after_site_body')
     @php
-
-        $headerLogo = $themeOption->where('name', $layout . '_template_header_logo')->first();
-        $headerMobileLogo = $themeOption->where('name', $layout . '_template_header_mobile_logo')->first();
-
         $header = option($layout . '_template_header', '');
         $footer = option($layout . '_template_footer', '');
         $isEnableProduct = option($layout . '_template_product', '');
 
-        $footerLogo = $themeOption->where('name', $layout . '_template_footer_logo')->first();
-        $googlePlay = $themeOption->where('name', $layout . '_template_google_play')->first();
-        $appStore = $themeOption->where('name', $layout . '_template_app_store')->first();
-        $downloadGooglePlay = $themeOption->where('name', $layout . '_template_download_google_play_logo')->first();
-        $downloadAppStore = $themeOption->where('name', $layout . '_template_download_app_store_logo')->first();
-        $paymentMethods = $themeOption->where('name', $layout . '_template_payment_methods')->first();
+        $themeOptions = $themeOption->keyBy('name');
+        $headerLogo = $themeOptions[$layout . '_template_header_logo'] ?? null;
+        $headerMobileLogo = $themeOptions[$layout . '_template_header_mobile_logo'] ?? null;
+        $footerLogo = $themeOptions[$layout . '_template_footer_logo'] ?? null;
+        $googlePlay = $themeOptions[$layout . '_template_google_play'] ?? null;
+        $appStore = $themeOptions[$layout . '_template_app_store'] ?? null;
+        $downloadGooglePlay = $themeOptions[$layout . '_template_download_google_play_logo'] ?? null;
+        $downloadAppStore = $themeOptions[$layout . '_template_download_app_store_logo'] ?? null;
+        $paymentMethods = $themeOptions[$layout . '_template_payment_methods'] ?? null;
+
+        $categories = App\Models\Category::whereNull('parent_id')->whereNot('id', 1)->get();
     @endphp
     <!-- Top nav start -->
     @doAction('before_site_top_nav')
 
+
     @include('../site/layouts.includes.header-top')
+
     <!-- Top nav end -->
 
     <!-- header section start -->
     @doAction('before_site_header')
-
     @include('../site/layouts.includes.header')
 
     <!-- header section end -->
@@ -163,21 +176,30 @@
         </div>
     </div>
 
+
     {{-- Modal --}}
-    @include('../site/layouts.includes.login-modal')
+    @guest
+        <div class="login-block"></div>
+    @endguest
 
     <!-- section footer start -->
     @doAction('before_site_footer')
 
     @include('../site/layouts.includes.footer')
 
+
     @doAction('after_site_footer')
     <!-- section footer end -->
     {{-- Item view modal --}}
 
-    @include('../site/layouts.includes.product-view')
 
+    @if (request()->route()->getName() != 'site.checkOut')
+        @include('../site/layouts.includes.product-view')
+    @endif
 
+    <script>
+        var loginNeeded = "{!! session('loginRequired') ? 1 : 0 !!}";
+    </script>
     <script src="{{ asset('public/dist/js/custom/site/formatting.min.js') }}"></script>
     <script src="{{ asset('public/frontend/assets/swiper/swiper-bundle.min.js') }}"></script>
     <!-- Custom Js -->
@@ -187,10 +209,10 @@
     <script src="{{ asset('public/frontend/assets/js/script.min.js') }}"></script>
     <script src="{{ asset('public/dist/js/custom/site/cart.min.js') }}"></script>
     <script src="{{ asset('public/dist/js/custom/site/lang.min.js') }}"></script>
-    <script src="{{ asset('public/dist/js/site-nav.min.js') }}"></script>
+    <script src="{{ asset('public/dist/js/site-nav.min.js?v=3.0') }}"></script>
     <script src="{{ asset('public/frontend/assets/js/sweet-alert2.min.js') }}"></script>
-    <script src="{{ asset('public/dist/js/custom/site/site.min.js') }}"></script>
-    <script src="{{ asset('public/frontend/assets/js/main.min.js') }}"></script>
+    <script src="{{ asset('public/dist/js/custom/site/site.min.js?v=2.9.3') }}"></script>
+    <script src="{{ asset('public/frontend/assets/js/main.min.js?v=3.2.1') }}"></script>
 
     @doAction("before_site_js_{$view_name}")
 
@@ -200,7 +222,7 @@
 
     <!-- User define custom dynamic js file -->
     @if (File::exists('Modules/CMS/Resources/assets/js/user-custom.js'))
-        <script src="{{ asset('Modules/CMS/Resources/assets/js/user-custom.js?v=' . time()) }}"></script>
+        <script async src="{{ asset('Modules/CMS/Resources/assets/js/user-custom.js?v=' . time()) }}"></script>
     @endif
 
     @doAction('before_site_body')

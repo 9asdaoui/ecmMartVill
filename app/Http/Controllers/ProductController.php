@@ -16,10 +16,11 @@ namespace App\Http\Controllers;
 use App\DataTables\ProductDataTable;
 use App\Http\Resources\AjaxSelectSearchResource;
 use App\Http\Resources\ProductDetailResource;
-use App\Models\{Attribute, Brand, Category, Order, OrderMeta, Product, ProductCategory, ProductMeta, Tag, Vendor};
+use App\Models\{Attribute, Brand, Category, Product, ProductCategory, ProductMeta, Tag, Vendor};
 use App\Services\Actions\Facades\ProductActionFacade as ProductAction;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Modules\Shipping\Entities\ShippingClass;
 use Modules\Tax\Entities\TaxClass;
@@ -73,10 +74,15 @@ class ProductController extends Controller
             'name' => $request->name ?? 'Untitled product',
             'status' => 'Draft',
         ]);
-        (new ProductCategory())->store([
-            'product_id' => $product->id,
-            'category_id' => 1,
-        ]);
+        
+        // Only set category if explicitly provided, don't default to 1
+        if ($request->has('category') && !empty($request->category)) {
+            $categoryId = $request->category;
+            (new ProductCategory())->store([
+                'product_id' => $product->id,
+                'category_id' => $categoryId,
+            ]);
+        }
         $request->request->add([
             'permalink' => $product->name,
             'code' => $product->code,
@@ -89,7 +95,6 @@ class ProductController extends Controller
                 return $response;
             }
         }
-
         $data = json_decode($response->getContent(), true);
         $product = Product::where('id', $product->id)->first();
 
@@ -114,7 +119,8 @@ class ProductController extends Controller
          * 5. save-_product_variation
          * 6. get_attribute_form
          * 7. load_product_variations
-         * 8. update_tags
+         * 8. load_attribute_options
+         * 9. update_tags
          */
         if (! $request->action) {
             return $this->unprocessableResponse([], __('Action name required.'));
@@ -128,6 +134,7 @@ class ProductController extends Controller
      */
     public function edit(Request $request)
     {
+
         $product = ProductAction::editModeOn()->execute('getProductWithAttributeAndVariations', $request);
 
         if ($product instanceof JsonResponse || $product == null) {
@@ -389,6 +396,5 @@ class ProductController extends Controller
         Session::flash('fail', __('Something went wrong. Product not found.'));
 
         return back();
-
     }
 }

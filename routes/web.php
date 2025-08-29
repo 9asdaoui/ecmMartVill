@@ -28,7 +28,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'LoginController@showLoginForm');
+
+
+// Route::get('/', 'LoginController@showLoginForm');
 Route::get('/login', 'LoginController@showLoginForm');
 Route::post('/authenticate', 'LoginController@authenticate')->name('login.post');
 
@@ -78,6 +80,8 @@ Route::group(['middleware' => ['auth', 'locale', 'permission']], function () {
     // User
     Route::get('user/list', 'UserController@index')->name('users.index');
     Route::get('user/create', 'UserController@create')->name('users.create');
+    Route::get('user/vendor', 'UserController@vendorList')->name('users.vendor.list');
+    Route::get('user/vendor-role', 'UserController@vendorRole')->name('users.vendor.role');
     Route::post('user/store', 'UserController@store')->middleware(['checkForDemoMode'])->name('users.store');
     Route::get('user/edit/{id}', 'UserController@edit')->name('users.edit');
     Route::post('user/updatePassword/{id}', 'UserController@updatePassword')->middleware(['checkForDemoMode'])->name('users.password');
@@ -375,6 +379,40 @@ Route::group(['middleware' => ['auth', 'locale', 'permission']], function () {
     Route::delete('sso/clients/{id}', 'SsoController@deleteClient')->name('sso.client.delete');
     Route::resource('api-keys', ApiKeyController::class)->except(['show', 'create', 'edit']);
     Route::match(['get', 'post'], 'api-settings', 'ApiKeyController@settings')->name('api-settings');
+
+    Route::get('themes', 'ThemeController@index')->name('themes.index');
+    Route::get('themes/{slug}', 'ThemeController@active')->name('themes.active');
+    
+    // Multi-Currency
+    Route::group(['prefix' => 'settings/currency', 'as' => 'settings.currency.'], function () {
+        Route::match(['get', 'post'], '/', 'CurrencySettingsController@index')->name('index');
+        Route::post('store', 'CurrencySettingsController@store')->name('store');
+        Route::get('{id}/edit', 'CurrencySettingsController@edit')->name('edit');
+        Route::put('update/{id}', 'CurrencySettingsController@update')->name('update');
+        Route::delete('{id}', 'CurrencySettingsController@destroy')->name('destroy');
+        Route::post('exchange-update', 'CurrencySettingsController@exchangeUpdate')->name('exchange-update');
+    });
+
+    // Solar Panel Management
+    Route::group(['prefix' => 'solar-panel', 'as' => 'solar-panel.'], function () {
+        Route::get('/', 'Modules\Estimation\Http\Controllers\PanelController@index')->name('index');
+        Route::post('/', 'Modules\Estimation\Http\Controllers\PanelController@store')->name('store');
+        Route::get('{id}', 'Modules\Estimation\Http\Controllers\PanelController@show')->name('show');
+        Route::put('{id}', 'Modules\Estimation\Http\Controllers\PanelController@update')->name('update');
+        Route::delete('{id}', 'Modules\Estimation\Http\Controllers\PanelController@destroy')->name('destroy');
+        Route::get('active/list', 'Modules\Estimation\Http\Controllers\PanelController@getActivePanels')->name('active');
+    });
+
+    // Inverter Management
+    Route::group(['prefix' => 'inverter', 'as' => 'inverter.'], function () {
+        Route::get('/', '\Modules\Estimation\Http\Controllers\InverterController@index')->name('index');
+        Route::post('/', '\Modules\Estimation\Http\Controllers\InverterController@store')->name('store');
+        Route::get('{id}', '\Modules\Estimation\Http\Controllers\InverterController@show')->name('show');
+        Route::put('{id}', '\Modules\Estimation\Http\Controllers\InverterController@update')->name('update');
+        Route::delete('{id}', '\Modules\Estimation\Http\Controllers\InverterController@destroy')->name('destroy');
+        Route::get('active/list', '\Modules\Estimation\Http\Controllers\InverterController@getActiveInverters')->name('active');
+    });
+
 });
 
 Route::group(['middleware' => ['isLoggedIn']], function () {
@@ -389,3 +427,67 @@ Route::get('/find-tags-in-ajax', 'ProductController@findTagsAjaxQuery')->name('f
 
 // Test Routes
 Route::get('/product/{code}/json', 'ProductController@productJson');
+
+// Test route for estimation integration
+Route::get('/test-estimation', function () {
+    try {
+        // Create a test product
+        $product = \App\Models\Product::create([
+            'name' => 'Test Solar Panel - ' . date('Y-m-d H:i:s'),
+            'status' => 'Draft',
+        ]);
+        
+        // Assign solar panel category
+        $category = new \App\Models\ProductCategory();
+        $category->store([
+            'product_id' => $product->id,
+            'category_id' => 1, // Solar panel category
+        ]);
+        
+        // Create sample request data like what comes from the form
+        $requestData = [
+            'regular_price' => 250.50,
+            'sale_price' => 225.00,
+            'meta_warranty_period' => '25 years',
+            'meta_dimension' => [
+                'width' => 1000,
+                'height' => 1500,
+                'length' => 40
+            ],
+            'meta_weight' => 25.5,
+            'brand_id' => 1,
+            'status' => 'Draft'
+        ];
+        
+        // Test ProductAction saveBasicInfo which should trigger estimation creation
+        $action = new \App\Services\Actions\ProductAction();
+        $result = $action->saveBasicInfo($requestData, $product);
+        
+        // Check if panel was created
+        $panel = \Illuminate\Support\Facades\DB::table('panels')->where('product_id', $product->id)->first();
+        
+        if ($panel) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Panel created successfully!',
+                'product_id' => $product->id,
+                'panel_id' => $panel->id,
+                'panel_data' => $panel
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Panel was not created',
+                'product_id' => $product->id,
+                'logs' => 'Check the logs for detailed information'
+            ]);
+        }
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+    }
+});

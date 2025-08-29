@@ -11,11 +11,12 @@
 namespace App\Services\Actions;
 
 use App\Enums\ProductType;
-use App\Models\{Attribute, AttributeValue, Product, ProductCategory, ProductCrossSale, ProductRelate, ProductTag, ProductMeta, ProductUpsale, Tag};
+use App\Models\{Attribute, AttributeValue, Product, ProductCategory, ProductCrossSale, ProductRelate, ProductTag, ProductMeta, ProductUpsale, Tag, Vendor};
 use App\Services\CustomFieldService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Modules\Shipping\Entities\ShippingClass;
 use Modules\Tax\Entities\TaxClass;
@@ -44,6 +45,7 @@ class ProductAction
         'admin.products.pieces.variations' => 'admin.products.pieces.variations',
         'admin.products.pieces.all-variation-attribute' => 'admin.products.pieces.all-variation-attribute',
         'admin.products.pieces.custom-single-variation' => 'admin.products.pieces.custom-single-variation',
+        'admin.products.pieces.attribute-options' => 'admin.products.pieces.attribute-options',
     ];
 
     protected $shouldSkipFields = [];
@@ -151,14 +153,20 @@ class ProductAction
         $productAttributes = [];
 
         for ($i = 0; $i <= $totalAttributes; $i++) {
+
             if (isset($data['attribute_names'][$i]) && isset($data['attribute_values'][$i])) {
+
                 $name = trim($data['attribute_names'][$i]);
                 $position = isset($data['attribute_position'][$i]) ? trim($data['attribute_position'][$i]) : $i;
+                $type = $data['attribute_types'][$i];
+
                 $key = strtolower(str_replace(' ', '', $name));
 
                 if (isset($attributes[$key])) {
                     continue;
                 }
+
+                $additionalValue = '';
 
                 if (! is_array($data['attribute_values'][$i])) {
                     $value = array_values(array_filter(array_map('trim', explode('|', $data['attribute_values'][$i]))));
@@ -167,21 +175,33 @@ class ProductAction
                     $productAttributes[$key] = AttributeValue::getAll()->whereIn('id', $value);
                 }
 
+                if (isset($data['attribute_types'][$i]) && $data['attribute_types'][$i] == 'color') {
+                    if (! empty($data['additional_color_values'][$i])) {
+                        $additionalValue = $data['additional_color_values'][$i];
+                    }
+                }
+
                 $visibility = isset($data['attribute_visibilities'][$i]) ? trim($data['attribute_visibilities'][$i]) : 0;
 
                 $variation = isset($data['attribute_variations'][$i]) ? trim($data['attribute_variations'][$i]) : 0;
 
                 $attributeId = isset($data['attribute_attr_id'][$i]) ? trim($data['attribute_attr_id'][$i]) : '';
 
+                $attributeShape = isset($data['attribute_shape'][$i]) ? trim($data['attribute_shape'][$i]) : '';
+
                 $attributes[$key] = [
                     'name' => $name,
                     'position' => $position,
                     'key' => $key,
                     'value' => $value,
+                    'additional_value' => $additionalValue,
+                    'type' => $type,
                     'visibility' => $visibility,
                     'variation' => $variation,
                     'attribute_id' => $attributeId,
+                    'attribute_shape' => $attributeShape,
                 ];
+
             }
         }
 
@@ -239,7 +259,6 @@ class ProductAction
      */
     protected function addProductVariation()
     {
-
         if (! isset($this->request->type)) {
             return $this->unprocessableResponse([], __('Please select variation type.'));
         }
@@ -557,6 +576,18 @@ class ProductAction
     }
 
     /**
+     * Get attribute option list
+     */
+    protected function loadAttributeOptions()
+    {
+        $product = $this->getProductWithAttributeAndVariations(true);
+
+        return $this->okResponse([
+            'html' => view($this->getRouteOrView('admin.products.pieces.attribute-options'), ['product' => $product])->render(),
+        ], __('Attribute Options loaded'));
+    }
+
+    /**
      * Get Product details with variations and attributes
      *
      * @return \Illuminate\Database\Eloquent\Collection
@@ -565,7 +596,7 @@ class ProductAction
     {
         $this->product = Product::with(['metadata', 'variations' => function ($q) {
             $q->with('metadata');
-        }])->whereId($this->product->id)->first();
+        }])->find($this->product->id);
 
         $variations = $this->onlyPurchasableVariation ? $this->product->getPurchaseableVariation() : $this->product->getVariations();
 
@@ -576,9 +607,12 @@ class ProductAction
             $this->product->attributeValues = $this->getAttributeValues($parentAttributeOptions);
             $attributes = array_keys($parentAttributeOptions);
 
-            foreach ($variations as $variation) {
-                $variation->getAttributeMeta($attributes);
+            if (is_array($attributes)) {
+                foreach ($variations as $variation) {
+                    $variation->getAttributeMeta($attributes);
+                } 
             }
+           
         }
 
         $this->product['variations'] = $variations;
@@ -605,29 +639,34 @@ class ProductAction
 
         $name = false;
 
-        foreach ($attributes as $key => $attribute) {
-            if ($this->request->attr_name == $attribute['name']) {
-                $name = $key;
+        if (! is_null($attributes)) {
 
-                break;
+            foreach ($attributes as $key => $attribute) {
+                if ($this->request->attr_name == $attribute['name']) {
+                    $name = $key;
+
+                    break;
+                }
             }
+
+            unset($attributes[$name]);
+
+            ProductMeta::where('product_id', $this->product->id)->where('key', 'attributes')->update(['value' => json_encode($attributes)]);
+
+            ProductMeta::where('key', 'attribute_' . $name)->delete();
+
+            if (count($attributes) < 1) {
+                $ids = $this->product->getVariations()->pluck('id');
+                ProductMeta::whereIn('product_id', $ids)->delete();
+                Product::whereIn('id', $ids)->delete();
+            }
+
+            ProductMeta::forgetCache();
+
+            return $this->successResponse([], 200, __('Attribute deleted.'));
         }
 
-        unset($attributes[$name]);
-
-        ProductMeta::where('product_id', $this->product->id)->where('key', 'attributes')->update(['value' => json_encode($attributes)]);
-
-        ProductMeta::where('key', 'attribute_' . $name)->delete();
-
-        if (count($attributes) < 1) {
-            $ids = $this->product->getVariations()->pluck('id');
-            ProductMeta::whereIn('product_id', $ids)->delete();
-            Product::whereIn('id', $ids)->delete();
-        }
-
-        ProductMeta::forgetCache();
-
-        return $this->successResponse([], 200, __('Attribute deleted.'));
+        return $this->errorResponse([], 403, __('The attribute is not saved yet!'));
     }
 
     /**
@@ -689,6 +728,10 @@ class ProductAction
 
         if (! isset($request['value'])) {
             return $this->unprocessableResponse([], __('Empty value is not acceptable.'));
+        }
+
+        if (AttributeValue::where(['attribute_id' => $request['attribute_id'], 'value' => $request['value']])->exists()) {
+            return $this->unprocessableResponse([], __('Attribute value already exists.'));
         }
 
         $attribute = AttributeValue::create([
@@ -986,6 +1029,14 @@ class ProductAction
             $newRequest = $request;
         }
 
+        if (
+            isSuperAdmin() && (! array_key_exists('vendor_id', $request) || $request['vendor_id'] === null)
+            && isset($request['status'])
+            && $request['status'] === 'Published'
+        ) {
+            $newRequest['vendor_id'] = Vendor::where('status', 'Active')->first()->id;
+        }
+
         // get only fillable field named value from request
         $fillables = array_intersect_key($fillables, $newRequest);
 
@@ -994,6 +1045,9 @@ class ProductAction
         $data = $this->postProcessRequestArray($data, $request);
 
         $product->update($data);
+
+        // Create estimation product if this is a solar panel (category_id=1) or inverter (category_id=2)
+        $this->createEstimationProductIfNeeded($product, $request);
 
         return $product;
     }
@@ -1365,9 +1419,7 @@ class ProductAction
      *
      * @return void
      */
-    protected function updateRouteAndViews()
-    {
-    }
+    protected function updateRouteAndViews() {}
 
     /**
      * Process invalid dates
@@ -1552,5 +1604,446 @@ class ProductAction
         }
 
         ProductMeta::insert($duplicateMeta);
+    }
+
+    /**
+     * Create estimation product if needed (solar panel or inverter)
+     *
+     * @param  Product  $product
+     * @param  array  $request
+     * @return void
+     */
+    protected function createEstimationProductIfNeeded($product, $request)
+    {
+        try {
+            // Get the effective category ID (direct category or parent category)
+            $effectiveCategoryId = $this->getProductCategoryId($product, $request);
+            
+            // Log the category detection
+            Log::info('Estimation integration: Category detected', [
+                'product_id' => $product->id,
+                'effective_category_id' => $effectiveCategoryId,
+                'from_request' => isset($request['category']) && !empty($request['category'])
+            ]);
+            
+            // Only proceed if we have a valid category for estimation (1 or 2)
+            if (!in_array($effectiveCategoryId, [1, 2])) {
+                // Clean up any existing estimation records if category is not 1 or 2
+                $this->cleanupAllEstimationRecords($product->id);
+                Log::info('Estimation integration: No valid category, cleaned up existing records', [
+                    'product_id' => $product->id,
+                    'effective_category_id' => $effectiveCategoryId
+                ]);
+                return;
+            }
+            
+            // Clean up incorrect estimation records first
+            $this->cleanupIncorrectEstimationRecords($product->id, $effectiveCategoryId);
+            
+            // Create or update the correct estimation record based on effective category
+            if ($effectiveCategoryId == 1) {
+                Log::info('Estimation integration: Processing SOLAR PANEL (including subcategories)', [
+                    'product_id' => $product->id,
+                    'effective_category_id' => $effectiveCategoryId
+                ]);
+                $this->createPanelFromProduct($product, $request);
+            } elseif ($effectiveCategoryId == 2) {
+                Log::info('Estimation integration: Processing INVERTER (including subcategories)', [
+                    'product_id' => $product->id,
+                    'effective_category_id' => $effectiveCategoryId
+                ]);
+                $this->createInverterFromProduct($product, $request);
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Estimation integration: Exception occurred', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+    }
+    
+    /**
+     * Get product category ID from request or database
+     * Also checks parent category for subcategories
+     *
+     * @param  Product  $product
+     * @param  array  $request
+     * @return int|null
+     */
+    protected function getProductCategoryId($product, $request)
+    {
+        $categoryId = null;
+        
+        // First check if category is being updated in the request
+        if (isset($request['category']) && !empty($request['category'])) {
+            $categoryId = (int) $request['category'];
+        } else {
+            // Otherwise get from database
+            $productCategory = ProductCategory::where('product_id', $product->id)->first();
+            if ($productCategory && $productCategory->category_id) {
+                $categoryId = (int) $productCategory->category_id;
+            }
+        }
+        
+        if (!$categoryId) {
+            return null;
+        }
+        
+        // Check if this category is eligible for estimation (1 or 2)
+        if (in_array($categoryId, [1, 2])) {
+            return $categoryId;
+        }
+        
+        // If not directly 1 or 2, check if it has a parent that is 1 or 2
+        $category = \App\Models\Category::find($categoryId);
+        if ($category && $category->parent_id && in_array($category->parent_id, [1, 2])) {
+            Log::info('Estimation integration: Found subcategory with eligible parent', [
+                'category_id' => $categoryId,
+                'parent_id' => $category->parent_id,
+                'category_name' => $category->name ?? 'unknown'
+            ]);
+            return (int) $category->parent_id;
+        }
+        
+        return $categoryId;
+    }
+    
+    /**
+     * Clean up all estimation records for a product
+     *
+     * @param  int  $productId
+     * @return void
+     */
+    protected function cleanupAllEstimationRecords($productId)
+    {
+        try {
+            $deletedPanels = DB::table('panels')
+                ->where('product_id', $productId)
+                ->delete();
+            
+            $deletedInverters = DB::table('inverters')
+                ->where('product_id', $productId)
+                ->delete();
+            
+            if ($deletedPanels > 0 || $deletedInverters > 0) {
+                Log::info('Estimation integration: Cleaned up all estimation records', [
+                    'product_id' => $productId,
+                    'deleted_panels' => $deletedPanels,
+                    'deleted_inverters' => $deletedInverters
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Estimation integration: Error cleaning up all records', [
+                'product_id' => $productId,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+    
+    /**
+     * Clean up incorrect estimation records for a product
+     *
+     * @param  int  $productId
+     * @param  int|null  $categoryId
+     * @return void
+     */
+    protected function cleanupIncorrectEstimationRecords($productId, $categoryId)
+    {
+        try {
+            // If category is 1 (solar panel), remove any inverter records
+            if ($categoryId == 1) {
+                $deletedInverters = DB::table('inverters')
+                    ->where('product_id', $productId)
+                    ->delete();
+                
+                if ($deletedInverters > 0) {
+                    Log::info('Estimation integration: Cleaned up inverter records for solar panel', [
+                        'product_id' => $productId,
+                        'deleted_inverters' => $deletedInverters
+                    ]);
+                }
+            }
+            // If category is 2 (inverter), remove any panel records
+            elseif ($categoryId == 2) {
+                $deletedPanels = DB::table('panels')
+                    ->where('product_id', $productId)
+                    ->delete();
+                
+                if ($deletedPanels > 0) {
+                    Log::info('Estimation integration: Cleaned up panel records for inverter', [
+                        'product_id' => $productId,
+                        'deleted_panels' => $deletedPanels
+                    ]);
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('Estimation integration: Error cleaning up incorrect records', [
+                'product_id' => $productId,
+                'category_id' => $categoryId,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Create panel record from product data
+     *
+     * @param  Product  $product
+     * @param  array  $request
+     * @return void
+     */
+    protected function createPanelFromProduct($product, $request)
+    {
+        try {
+            // Check if panel already exists for this product
+            $existingPanel = DB::table('panels')->where('product_id', $product->id)->first();
+            
+            // Prepare panel data
+            $panelData = $this->preparePanelData($product, $request);
+            
+            if ($existingPanel) {
+                // Update existing panel
+                $this->updateExistingPanel($existingPanel, $panelData);
+            } else {
+                // Create new panel
+                $this->createNewPanel($panelData);
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Estimation integration: Exception in createPanelFromProduct', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+    
+    /**
+     * Prepare panel data from product and request
+     *
+     * @param  Product  $product
+     * @param  array  $request
+     * @return array
+     */
+    protected function preparePanelData($product, $request)
+    {
+        // Get brand name
+        $brandName = null;
+        if ($product->brand_id) {
+            $brand = \App\Models\Brand::find($product->brand_id);
+            $brandName = $brand ? $brand->name : null;
+        }
+        
+        // Extract price from product
+        $price = $product->sale_price ?? $product->regular_price;
+        
+        // Extract dimensions and other data from request
+        $panelData = [
+            'name' => $product->name,
+            'product_id' => $product->id,
+            'brand' => $brandName,
+            'price' => $price,
+            'warranty_years' => $request['meta_warranty_period'] ?? null,
+            'width_mm' => $request['meta_dimension']['width'] ?? null,
+            'height_mm' => $request['meta_dimension']['height'] ?? null,
+            'weight_kg' => $request['meta_weight'] ?? null,
+            'status' => 'pending_review'
+        ];
+        
+        // Remove null values
+        $panelData = array_filter($panelData, function($value) {
+            return !is_null($value);
+        });
+        
+        Log::info('Estimation integration: Panel data prepared', [
+            'product_id' => $product->id,
+            'panel_data' => $panelData
+        ]);
+        
+        return $panelData;
+    }
+    
+    /**
+     * Update existing panel
+     *
+     * @param  object  $existingPanel
+     * @param  array  $panelData
+     * @return void
+     */
+    protected function updateExistingPanel($existingPanel, $panelData)
+    {
+        // Remove product_id from update data
+        $updateData = $panelData;
+        unset($updateData['product_id']);
+        
+        $updated = DB::table('panels')
+            ->where('product_id', $panelData['product_id'])
+            ->update($updateData);
+        
+        Log::info('Estimation integration: Panel updated', [
+            'product_id' => $panelData['product_id'],
+            'panel_id' => $existingPanel->id,
+            'rows_updated' => $updated
+        ]);
+    }
+    
+    /**
+     * Create new panel
+     *
+     * @param  array  $panelData
+     * @return void
+     */
+    protected function createNewPanel($panelData)
+    {
+        try {
+            // Create panel using the PanelController
+            $panelController = new \Modules\Estimation\Http\Controllers\PanelController();
+            $panelRequest = new \Illuminate\Http\Request($panelData);
+            
+            $result = $panelController->storeFromProduct($panelRequest);
+            
+            if (isset($result['success']) && $result['success']) {
+                Log::info('Estimation integration: Panel created successfully', [
+                    'product_id' => $panelData['product_id'],
+                    'panel_id' => $result['panel']->id ?? null
+                ]);
+            } else {
+                Log::error('Estimation integration: Failed to create panel', [
+                    'product_id' => $panelData['product_id'],
+                    'result' => $result
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Estimation integration: Exception creating panel', [
+                'product_id' => $panelData['product_id'],
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Create inverter record from product data
+     *
+     * @param  Product  $product
+     * @param  array  $request
+     * @return void
+     */
+    protected function createInverterFromProduct($product, $request)
+    {
+        try {
+            // Check if inverter already exists for this product
+            $existingInverter = DB::table('inverters')->where('product_id', $product->id)->first();
+            
+            // Prepare inverter data
+            $inverterData = $this->prepareInverterData($product, $request);
+            
+            if ($existingInverter) {
+                // Update existing inverter
+                $this->updateExistingInverter($existingInverter, $inverterData);
+            } else {
+                // Create new inverter
+                $this->createNewInverter($inverterData);
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Estimation integration: Exception in createInverterFromProduct', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+    
+    /**
+     * Prepare inverter data from product and request
+     *
+     * @param  Product  $product
+     * @param  array  $request
+     * @return array
+     */
+    protected function prepareInverterData($product, $request)
+    {
+        // Get brand name
+        $brandName = null;
+        if ($product->brand_id) {
+            $brand = \App\Models\Brand::find($product->brand_id);
+            $brandName = $brand ? $brand->name : null;
+        }
+        
+        // Extract price from product
+        $price = $product->sale_price ?? $product->regular_price;
+        
+        // Create inverter request data
+        $inverterData = [
+            'name' => $product->name,
+            'product_id' => $product->id,
+            'brand' => $brandName,
+            'price' => $price,
+            'warranty' => $request['meta_warranty_period'] ?? null,
+            'status' => 'pending_review'
+        ];
+        
+        // Remove null values
+        $inverterData = array_filter($inverterData, function($value) {
+            return !is_null($value) && $value !== '';
+        });
+        
+        Log::info('Estimation integration: Inverter data prepared', [
+            'product_id' => $product->id,
+            'inverter_data' => $inverterData
+        ]);
+        
+        return $inverterData;
+    }
+    
+    /**
+     * Update existing inverter
+     *
+     * @param  object  $existingInverter
+     * @param  array  $inverterData
+     * @return void
+     */
+    protected function updateExistingInverter($existingInverter, $inverterData)
+    {
+        // Remove product_id from update data
+        $updateData = $inverterData;
+        unset($updateData['product_id']);
+        
+        $updated = DB::table('inverters')
+            ->where('product_id', $inverterData['product_id'])
+            ->update($updateData);
+        
+        Log::info('Estimation integration: Inverter updated', [
+            'product_id' => $inverterData['product_id'],
+            'inverter_id' => $existingInverter->id,
+            'rows_updated' => $updated
+        ]);
+    }
+    
+    /**
+     * Create new inverter
+     *
+     * @param  array  $inverterData
+     * @return void
+     */
+    protected function createNewInverter($inverterData)
+    {
+        try {
+            // Create inverter using the InverterController
+            $inverterController = new \Modules\Estimation\Http\Controllers\InverterController();
+            $inverterRequest = new \Illuminate\Http\Request($inverterData);
+            
+            $result = $inverterController->store($inverterRequest);
+            
+            Log::info('Estimation integration: Inverter created successfully', [
+                'product_id' => $inverterData['product_id'],
+                'result' => $result
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Estimation integration: Exception creating inverter', [
+                'product_id' => $inverterData['product_id'],
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

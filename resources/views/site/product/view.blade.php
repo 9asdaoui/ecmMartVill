@@ -19,12 +19,10 @@
 
     $vendorDetails = $product->vendor;
     $groupProducts = $product->groupProducts();
-    $relatedProducts = $product->getRelatedProducts();
     $avg = $product->review()->where('status', 'Active')->avg('rating');
     $reviewCount = $product->review->where('status', 'Active')->count('rating');
-    $sameShop = $product->sameShop();
+
     $reviews = $product->review()->where('status', 'Active')->paginate(5);
-    $product = $product;
     $displayPrice = preference('display_price_in_shop');
     $categoryPath = $product->categoryPath();
     $filterVariation = $product->filterVariation();
@@ -47,10 +45,9 @@
 @endsection
 @section('content')
 
-    {{-- hide the vendor content "made by Qasdaoui" --}}
     <style>
         /* Hide all vendor information and related buttons
-                    /* Vendor info box */
+                        /* Vendor info box */
         .relative.z-ng.px-2.pb-15p.border.rounded.rounded-b-none,
 
         /* Vendor info tab */
@@ -81,6 +78,7 @@
             display: none !important;
         }
     </style>
+
     <!-- Details section start -->
     <section class="layout-wrapper px-4 xl:px-0 md:mt-30p mt-5" id="item-details-container">
 
@@ -243,7 +241,7 @@
                     @if (!$product->isGroupedProduct() && !$product->isExternalProduct())
                         @include('site.layouts.section.product-details.variation')
                     @endif
-                                        <!-- Simple Out of Stock Contact Card made by 9asdaoui -->
+                    <!-- Simple Out of Stock Contact Card -->
                     @if ($isOutOfStock)
                         <div class="out-of-stock-contact mt-5 p-4 border rounded-md bg-gray-50">
                             <div class="flex items-center justify-between border-b pb-3 mb-3">
@@ -276,7 +274,6 @@
                             </div>
                         </div>
                     @endif
-
                     @doAction('before_single_product_summary_add_to_cart', $definedData)
 
                     @include('site.layouts.section.product-details.add-to-cart')
@@ -311,6 +308,7 @@
                                     $initialTab = -1;
                                     $ratingTab = -1;
                                 @endphp
+                                {{-- the part responsable for the discription --}}
                                 @if (
                                     !empty(strip_tags($description)) ||
                                         strpos($description, '<img src') ||
@@ -320,6 +318,7 @@
                                         $initialTab++;
                                         $ratingTab++;
                                     @endphp
+
                                     <a href="javascript:void(0)" class="c-tabs-nav__link is-active"
                                         id="product-description">{{ __('Description') }}</a>
                                 @endif
@@ -370,11 +369,7 @@
                                 strpos($description, '<img src') ||
                                 !empty($summary) ||
                                 (isset($videos) && is_array($videos) && count($videos) > 0))
-                            {{-- made by 9asdaoui --}}
-                            {{-- move this to the description component --}}
-                            @if (!empty($summary))
-
-                                {{-- @php
+                            @php
                                 $summaryArray = json_decode($summary, true);
                                 $locale = app()->getLocale();
                                 $localizedSummary = $summaryArray[$locale] ?? $summaryArray['fr'];
@@ -384,36 +379,11 @@
                                 <p class="text-gray-700 leading-relaxed font-normal roboto-regular">
                                     {{ $localizedSummary }}
                                 </p>
-                            </div> --}}
-
-                                @if (!empty($summary))
-                                    @php
-                                        $summaryArray = json_decode($summary, true);
-                                        $locale = app()->getLocale();
-                                        $localizedSummary = '';
-
-                                        // Safely check if $summaryArray is an array before accessing
-                                        if (is_array($summaryArray)) {
-                                            $localizedSummary = $summaryArray[$locale] ?? ($summaryArray['fr'] ?? '');
-                                        } else {
-                                            // Fallback to using $summary as a direct string if not valid JSON
-                                            $localizedSummary = $summary;
-                                        }
-                                    @endphp
-
-                                    @if (!empty($localizedSummary))
-                                        <div class="product-summary mb-4">
-                                            <p class="text-gray-700 leading-relaxed font-normal roboto-regular">
-                                                {{ $localizedSummary }}
-                                            </p>
-                                        </div>
-                                    @endif
-                                @endif
-                            @endif
-
-                            {{-- end  --}}
+                            </div>
                             @include('site.layouts.section.product-details.description')
                         @endif
+
+
                         @if (
                             !empty($attributes) ||
                                 !empty($weight) ||
@@ -441,10 +411,69 @@
                 </section>
 
                 @doAction('before_single_product_detail_related_products', $definedData)
-
-                @include('site.layouts.section.product-details.related-products')
-
+                @if (count($product->getRelatedProductIds()))
+                    <div id="related_products" data-itemId="{{ $product->id }}">
+                        <div class="mt-15p md:mt-30p">
+                            <p class="mt-3 md:mt-0 dm-bold text-base md:text-xl text-gray-12">{{ __('Related Product') }}
+                            </p>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
+                                @for ($i = 1; $i <= 3; $i++)
+                                    <div>
+                                        <div class="skeleton-box bg-gray-11 rev-img rounded-md relative">
+                                            <div class="p-10 flex justify-center items-center h-40">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p
+                                                class="text-13 text-gray-10 roboto-medium mt-3 skeleton-box py-2 inline-block w-full">
+                                            </p>
+                                            <p
+                                                class="skeleton-box py-2 inline-block w-full text-20 text-gray-12 dm-sans mt-0.5 font-medium">
+                                            </p>
+                                            <div class="item-rating mt-1p skeleton-box py-2 inline-block w-120p"></div>
+                                            <div class="item-rating mt-1p skeleton-box py-2 inline-block w-full"></div>
+                                        </div>
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 @doAction('after_single_product_detail_related_products', $definedData)
+
+                @doAction('before_single_product_detail_upsale_products', $definedData)
+
+                @if (count($product->getUpSaleIds()))
+
+                    <div id="upsale_products" data-itemId="{{ $product->id }}">
+                        <div class="mt-12">
+                            <p class="mt-3 md:mt-0 dm-bold text-base md:text-xl text-gray-12">
+                                {{ __('You May Also Like') }}</p>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
+                                @for ($i = 1; $i <= 3; $i++)
+                                    <div>
+                                        <div class="skeleton-box bg-gray-11 rev-img rounded-md relative">
+                                            <div class="p-10 flex justify-center items-center h-40">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p
+                                                class="text-13 text-gray-10 roboto-medium mt-3 skeleton-box py-2 inline-block w-full">
+                                            </p>
+                                            <p
+                                                class="skeleton-box py-2 inline-block w-full text-20 text-gray-12 dm-sans mt-0.5 font-medium">
+                                            </p>
+                                            <div class="item-rating mt-1p skeleton-box py-2 inline-block w-120p"></div>
+                                            <div class="item-rating mt-1p skeleton-box py-2 inline-block w-full"></div>
+                                        </div>
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @doAction('after_single_product_detail_upsale_products', $definedData)
             </div>
             <div class="w-full lg:w-28% md:mt-4 ltr:lg:pl-3 rtl:lg:pr-3">
 
@@ -459,8 +488,9 @@
                             </div>
                             <div class="w-1/5">
                                 <div class="mt-4">
-                                    <img class="w-full h-full"
-                                        src="{{ optional($vendorDetails->logo)->fileUrl() ?? $vendorDetails->fileUrl() }}"
+                                    <img class="w-full h-full lazy-image"
+                                        src="{{ asset(defaultImage('small_product')) }}"
+                                        data-src="{{ optional($vendorDetails->logo)->fileUrlQuery() ?? $vendorDetails->fileUrlQuery() }}"
                                         alt="{{ __('Image') }}">
                                 </div>
                             </div>
@@ -523,8 +553,28 @@
                     @endauth
 
                     @doAction('before_single_product_detail_same_shop_products', $definedData)
-
-                    @include('site.layouts.section.product-details.same-shop')
+                    <div id="same_shop" data-itemId="{{ $product->id }}">
+                        <div class="mt-15p md:mt-30p">
+                            <p class="font-medium dm-sans text-base md:text-17 text-gray-12">
+                                {{ __('More Products From Them') }}</p>
+                            @for ($i = 0; $i <= 6; $i++)
+                                <div class="mt-4 flex">
+                                    <div class="skeleton-box bg-gray-11 rev-img rounded-md relative">
+                                        <div class="p-10 flex justify-center items-center h-20"></div>
+                                    </div>
+                                    <div class="text-center ml-10 w-150p mr-10">
+                                        <p
+                                            class="text-13 text-gray-10 roboto-medium mt-3 skeleton-box py-2 inline-block w-full">
+                                        </p>
+                                        <p
+                                            class="skeleton-box py-2 inline-block w-9/12 text-20 text-gray-12 dm-sans mt-0.5 font-medium w-full">
+                                        </p>
+                                        <div class="item-rating mt-1p skeleton-box py-2 inline-block w-full"></div>
+                                    </div>
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
 
                     @doAction('after_single_product_detail_same_shop_products', $definedData)
 
@@ -545,6 +595,7 @@
         }
         $format = getFormatedCountdown();
         $formatSaleTo = date($format, strtotime(strtr($sale_to, ' ', '')));
+        $multicurrencyData = defaultMulticurrencyData();
     @endphp
     <script>
         var itemId = "{{ $id }}";
@@ -575,7 +626,12 @@
         isGroupProduct = "{{ $product->isGroupedProduct() }}";
         tempIsGroupProduct = isGroupProduct;
         tempItemType = "{{ $type }}";
+        currencySymbol = "{{ $multicurrencyData['symbol'] }}";
+        decimal_digits = "{{ $multicurrencyData['allow_decimal'] }}";
+        exchangeRate = "{{ $multicurrencyData['exchange_rate'] }}";
         var videoExtensions = @json(getFileExtensions(6));
+        var smallImage = "{{ asset(defaultImage('small_product')) }}";
+        var largeImage = "{{ asset(defaultImage('large_product')) }}";
     </script>
     <!-- Product Tracking Script JS -->
     @includeIf ('externalcode::layouts.scripts.productDetailsScript')
@@ -585,6 +641,6 @@
     <script src="{{ asset('public/dist/js/custom/site/compare.min.js') }}"></script>
     <script src="{{ asset('public/dist/js/custom/site/description-tabs.min.js') }}"></script>
     <script src="{{ asset('public/dist/js/custom/jquery.blockUI.min.js') }}"></script>
-    <script src="{{ asset('public/dist/js/custom/site/product-details.min.js') }}"></script>
+    <script src="{{ asset('public/dist/js/custom/site/product-details.min.js?v=2.9.3') }}"></script>
     <script src="{{ asset('public/dist/js/custom/site/delivery-address.min.js') }}"></script>
 @endsection
