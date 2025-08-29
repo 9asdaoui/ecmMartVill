@@ -85,7 +85,7 @@ return new class extends Migration
             $table->decimal('optimum_tilt', 5, 2)->nullable();
             $table->decimal('optimum_azimuth', 5, 2)->nullable();
             $table->decimal('total_losses_percent', 5, 2)->nullable();
-            $table->decimal('roof_net_tilt', 5, 2)->nullable()->after('roof_tilt')->comment('Calculated net tilt considering optimal angle');
+            $table->decimal('roof_net_tilt', 5, 2)->nullable()->comment('Calculated net tilt considering optimal angle');
             
             // Status
             $table->enum('status', ['draft', 'pending', 'completed', 'failed'])->default('draft');
