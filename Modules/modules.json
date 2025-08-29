@@ -25,5 +25,6 @@
     "Upgrader": true,
     "BulkPayment": true,
     "Inventory": true,
-    "Paypal": true
+    "Paypal": true,
+    "Estimation": true
 }
