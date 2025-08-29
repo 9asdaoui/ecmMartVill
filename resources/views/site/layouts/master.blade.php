@@ -22,7 +22,7 @@
         $primaryColor = option($layout . '_template_primary_color', '#FCCA19');
 
         [$fontFamily, $genericFamily] = explode(',', option($layout . '_template_font_family', 'DM Sans, sans-serif'));
-        $multiCurrencies = \App\Models\MultiCurrency::getAll();
+        $multiCurrencies = \App\Models\Currency::getAll();
         $defaultMulticurrency = defaultMulticurrencyData($multiCurrencies);
     @endphp
     <style>
