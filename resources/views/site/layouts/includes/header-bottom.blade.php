@@ -61,7 +61,7 @@
                                                         <div class="flex justify-center items-center">
                                                             <div class="h-5 w-5">
                                                                 <img class="h-full"
-                                                                    src="{{ $category->fileUrl() }}"
+                                                                    src="{{ $category->fileUrddl() }}"
                                                                     alt="{{ __('Image') }}">
                                                             </div>
                                                             <span
