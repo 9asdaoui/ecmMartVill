@@ -26,5 +26,6 @@
     "BulkPayment": true,
     "Inventory": true,
     "Paypal": true,
+    "B2B": true,
     "Estimation": true
 }
