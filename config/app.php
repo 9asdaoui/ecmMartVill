@@ -173,7 +173,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        // Modules\Estimation\Providers\EstimationServiceProvider::class,
+        Modules\Estimation\Providers\EstimationServiceProvider::class,
 
 
         /*
