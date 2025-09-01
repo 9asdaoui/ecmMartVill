@@ -61,7 +61,7 @@
                                                         <div class="flex justify-center items-center">
                                                             <div class="h-5 w-5">
                                                                 <img class="h-full"
-                                                                    src="{{ $category->fileUrlQuery() }}"
+                                                                    src="{{ $category->fileUrl() }}"
                                                                     alt="{{ __('Image') }}">
                                                             </div>
                                                             <span
@@ -311,7 +311,7 @@
                                                                 class="flex p-15p text-base font-medium text-gray-10 roboto-medium hover:bg-gray-100 hover:text-gray-900"
                                                                 role="menuitem">
                                                                 @if ($downloadGooglePlay->objectFile)
-                                                                    <img src="{{ $downloadGooglePlay->fileUrlQuery() }}"
+                                                                    <img src="{{ $downloadGooglePlay->fileUrl() }}"
                                                                         alt="{{ __('Image') }}">
                                                                 @else
                                                                     {{ __('Google Play') }}
@@ -323,7 +323,7 @@
                                                                 class="flex p-15p text-base font-medium text-gray-10 roboto-medium hover:bg-gray-100 hover:text-gray-900"
                                                                 role="menuitem">
                                                                 @if ($downloadAppStore->objectFile)
-                                                                    <img src="{{ $downloadAppStore->fileUrlQuery() }}"
+                                                                    <img src="{{ $downloadAppStore->fileUrl() }}"
                                                                         alt="{{ __('Image') }}">
                                                                     @else{{ __('IOS') }}
                                                                 @endif
@@ -420,7 +420,7 @@
                                                 @endif
                                             </div>
                                             <img class="hero-slide-img md:rounded-lg object-cover w-full"
-                                                src="{{ $slide->fileUrlQuery() }}">
+                                                src="{{ $slide->fileUrl() }}">
                                         </div>
                                     </div>
                                 @endforeach
