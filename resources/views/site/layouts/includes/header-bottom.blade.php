@@ -61,7 +61,7 @@
                                                         <div class="flex justify-center items-center">
                                                             <div class="h-5 w-5">
                                                                 <img class="h-full"
-                                                                    src="{{ $category->fileUrddl() }}"
+                                                                    src="{{ $category->fileUrl() }}"
                                                                     alt="{{ __('Image') }}">
                                                             </div>
                                                             <span
@@ -311,7 +311,7 @@
                                                                 class="flex p-15p text-base font-medium text-gray-10 roboto-medium hover:bg-gray-100 hover:text-gray-900"
                                                                 role="menuitem">
                                                                 @if ($downloadGooglePlay->objectFile)
-                                                                    <img src="{{ $downloadGooglePlay->fileUrl() }}"
+                                                                    <img src="{{ $downloadGooglePlay->fileUrlQuery() }}"
                                                                         alt="{{ __('Image') }}">
                                                                 @else
                                                                     {{ __('Google Play') }}
