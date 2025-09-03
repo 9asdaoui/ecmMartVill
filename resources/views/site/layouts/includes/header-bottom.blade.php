@@ -311,7 +311,9 @@
                                                                 class="flex p-15p text-base font-medium text-gray-10 roboto-medium hover:bg-gray-100 hover:text-gray-900"
                                                                 role="menuitem">
                                                                 @if ($downloadGooglePlay->objectFile)
-                                                                    <img src="{{ $downloadGooglePlay->fileUrlQuery() }}"
+                                                                    <img src="{{ $downloadGooglePlay->fileUrl() }}"
+
+                                                                    {{-- <img src="{{ $downloadGooglePlay->fileUrl() }}" u need to fix this , if u see thei abort this right away  --}}
                                                                         alt="{{ __('Image') }}">
                                                                 @else
                                                                     {{ __('Google Play') }}
